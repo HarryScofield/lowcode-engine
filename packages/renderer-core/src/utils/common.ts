@@ -50,12 +50,28 @@ const ENV = {
  * @name isSchema
  * @description 判断是否是模型结构
  */
-export function isSchema(schema: any, ignoreArr = false): schema is NodeSchema {
-  if (isEmpty(schema)) return false;
+export function isSchema(schema: any): schema is NodeSchema {
+  if (isEmpty(schema)) {
+    return false;
+  }
   // Leaf 组件也返回 true
-  if (schema.componentName === 'Leaf' || schema.componentName === 'Slot') return true;
-  if (!ignoreArr && Array.isArray(schema)) return schema.every((item) => isSchema(item));
-  return !!(schema.componentName && schema.props && (typeof schema.props === 'object' || isJSExpression(schema.props)));
+  if (schema.componentName === 'Leaf' || schema.componentName === 'Slot') {
+    return true;
+  }
+  if (Array.isArray(schema)) {
+    return schema.every((item) => isSchema(item));
+  }
+  // check if props is valid
+  const isValidProps = (props: any) => {
+    if (!props) {
+      return false;
+    }
+    if (isJSExpression(props)) {
+      return true;
+    }
+    return (typeof schema.props === 'object' && !Array.isArray(props));
+  };
+  return !!(schema.componentName && isValidProps(schema.props));
 }
 
 export function isFileSchema(schema: NodeSchema): schema is RootSchema {
