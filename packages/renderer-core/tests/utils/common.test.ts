@@ -53,3 +53,9 @@ describe('test isFileSchema from utils/common ', () => {
     expect(isFileSchema({ componentName: 'Button', props: {}})).toBeFalsy();
   });
 });
+
+// describe('test inSameDomain from utils/common ', () => {
+//   it('should work', () => {
+//     expect(window).toBeTruthy();
+//   });
+// });

@@ -73,6 +73,7 @@ export function isSchema(schema: any): schema is NodeSchema {
   };
   return !!(schema.componentName && isValidProps(schema.props));
 }
+
 /**
  * componentName 是否协议中定义的几种容器类型：低代码业务组件容器 Component、区块容器 Block、页面容器 Page
  * @param schema
@@ -85,7 +86,10 @@ export function isFileSchema(schema: NodeSchema): schema is RootSchema {
   return ['Page', 'Block', 'Component'].includes(schema.componentName);
 }
 
-// 判断当前页面是否被嵌入到同域的页面中
+/**
+ * 判断当前页面是否被嵌入到同域的页面中
+ * @returns boolean
+ */
 export function inSameDomain() {
   try {
     return window.parent !== window && window.parent.location.host === window.location.host;
@@ -197,32 +201,6 @@ export function canAcceptsRef(Comp: any) {
   return Comp?.$$typeof === REACT_FORWARD_REF_TYPE || Comp?.prototype?.isReactComponent || Comp?.prototype?.setState || Comp._forwardRef;
 }
 
-/**
- * 黄金令箭埋点
- * @param {String} gmKey 为黄金令箭业务类型
- * @param {Object} params 参数
- * @param {String} logKey 属性串
- */
-export function goldlog(gmKey: string, params = {}, logKey = 'other') {
-  // vscode 黄金令箭API
-  const sendIDEMessage = (window as any).sendIDEMessage || (inSameDomain() && (window.parent as any).sendIDEMessage);
-  const goKey = serializeParams({
-    sdkVersion: pkg.version,
-    env: getEnv(),
-    ...params,
-  });
-  if (sendIDEMessage) {
-    sendIDEMessage({
-      action: 'goldlog',
-      data: {
-        logKey: `/lce.core.${logKey}`,
-        gmKey,
-        goKey,
-      },
-    });
-  }
-  (window as any)?.goldlog?.record(`/lce.core.${logKey}`, gmKey, goKey, 'POST');
-}
 
 // utils为编辑器打包生成的utils文件内容，utilsConfig为数据库存放的utils配置
 export function generateUtils(utils: any, utilsConfig: Array<{ name: string; type: string; content: any }>) {
