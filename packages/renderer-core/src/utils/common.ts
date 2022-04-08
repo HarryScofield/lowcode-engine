@@ -113,10 +113,20 @@ export function getFileCssName(fileName: string) {
     .filter((p) => !!p)
     .join('-');
 }
-
-// 兼容乐高设计态 JSBlock 的老协议
+/**
+ * 判断是否JSSlot类型
+ * @returns string
+ */
 export function isJSSlot(obj: any): obj is JSSlot {
-  return obj && typeof obj === 'object' && ([EXPRESSION_TYPE.JSSLOT, EXPRESSION_TYPE.JSBLOCK].includes(obj.type));
+  if (!obj) {
+    return false;
+  }
+  if (typeof obj !== 'object' || Array.isArray(obj)) {
+    return false;
+  }
+
+  // 兼容原 JSBlock 的老协议
+  return ([EXPRESSION_TYPE.JSSLOT, EXPRESSION_TYPE.JSBLOCK].includes(obj.type));
 }
 
 /**

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { isSchema, isFileSchema, inSameDomain, getFileCssName } from '../../src/utils/common';
+import { isSchema, isFileSchema, inSameDomain, getFileCssName, isJSSlot } from '../../src/utils/common';
 
 describe('test isSchema', () => {
   it('should be false when empty value is passed', () => {
@@ -102,12 +102,25 @@ describe('test inSameDomain ', () => {
 });
 
 
-describe.only('test getFileCssName ', () => {
+describe('test getFileCssName ', () => {
   it('should work', () => {
     expect(getFileCssName(null)).toBe(undefined);
     expect(getFileCssName(undefined)).toBe(undefined);
     expect(getFileCssName('')).toBe(undefined);
     expect(getFileCssName('FileName')).toBe('lce-file-name');
     expect(getFileCssName('Page1_abc')).toBe('lce-page1_abc');
+  });
+});
+
+
+describe('test isJSSlot ', () => {
+  it('should work', () => {
+    expect(isJSSlot(null)).toBeFalsy();
+    expect(isJSSlot(undefined)).toBeFalsy();
+    expect(isJSSlot('stringValue')).toBeFalsy();
+    expect(isJSSlot([1, 2, 3])).toBeFalsy();
+    expect(isJSSlot({ type: 'JSSlot'})).toBeTruthy();
+    expect(isJSSlot({ type: 'JSBlock'})).toBeTruthy();
+    expect(isJSSlot({ type: 'anyOtherType'})).toBeFalsy();
   });
 });
