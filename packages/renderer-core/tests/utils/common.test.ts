@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { isSchema, isFileSchema, inSameDomain } from '../../src/utils/common';
+import { isSchema, isFileSchema, inSameDomain, getFileCssName } from '../../src/utils/common';
 
-describe('test isSchema from utils/common ', () => {
+describe('test isSchema', () => {
   it('should be false when empty value is passed', () => {
     expect(isSchema(null)).toBeFalsy();
     expect(isSchema(undefined)).toBeFalsy();
@@ -39,7 +39,7 @@ describe('test isSchema from utils/common ', () => {
   });
 });
 
-describe('test isFileSchema from utils/common ', () => {
+describe('test isFileSchema ', () => {
   it('should be false when invalid schema is passed', () => {
     expect(isFileSchema({ xxxName: 'Button'})).toBeFalsy();
     expect(isFileSchema({ componentName: 'Button', props: null})).toBeFalsy();
@@ -54,7 +54,7 @@ describe('test isFileSchema from utils/common ', () => {
   });
 });
 
-describe('test inSameDomain from utils/common ', () => {
+describe('test inSameDomain ', () => {
   let windowSpy;
 
   beforeEach(() => {
@@ -98,5 +98,16 @@ describe('test inSameDomain from utils/common ', () => {
     }));
 
     expect(inSameDomain()).toBeFalsy();
+  });
+});
+
+
+describe.only('test getFileCssName ', () => {
+  it('should work', () => {
+    expect(getFileCssName(null)).toBe(undefined);
+    expect(getFileCssName(undefined)).toBe(undefined);
+    expect(getFileCssName('')).toBe(undefined);
+    expect(getFileCssName('FileName')).toBe('lce-file-name');
+    expect(getFileCssName('Page1_abc')).toBe('lce-page1_abc');
   });
 });

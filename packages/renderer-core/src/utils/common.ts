@@ -98,8 +98,15 @@ export function inSameDomain() {
   }
 }
 
+/**
+ * 根据fileName提供FileCssName
+ * FileName -> lce-file-name
+ * @returns string
+ */
 export function getFileCssName(fileName: string) {
-  if (!fileName) return;
+  if (!fileName) {
+    return;
+  }
   const name = fileName.replace(/([A-Z])/g, '-$1').toLowerCase();
   return (`lce-${name}`)
     .split('-')
