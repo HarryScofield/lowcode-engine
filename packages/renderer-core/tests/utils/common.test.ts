@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { isSchema, isFileSchema } from '../../src/utils/common';
+import { isSchema, isFileSchema, inSameDomain } from '../../src/utils/common';
 
 describe('test isSchema from utils/common ', () => {
   it('should be false when empty value is passed', () => {
@@ -54,8 +54,49 @@ describe('test isFileSchema from utils/common ', () => {
   });
 });
 
-// describe('test inSameDomain from utils/common ', () => {
-//   it('should work', () => {
-//     expect(window).toBeTruthy();
-//   });
-// });
+describe('test inSameDomain from utils/common ', () => {
+  let windowSpy;
+
+  beforeEach(() => {
+    windowSpy = jest.spyOn(window, "window", "get");
+  });
+
+  afterEach(() => {
+    windowSpy.mockRestore();
+  });
+  it('should work', () => {
+
+    windowSpy.mockImplementation(() => ({
+      parent: {
+        location: {
+          host: "example.com"
+        },
+      },
+      location: {
+        host: "example.com"
+      }
+    }));
+    expect(inSameDomain()).toBeTruthy();
+
+    windowSpy.mockImplementation(() => ({
+      parent: {
+        location: {
+          host: "example.com"
+        },
+      },
+      location: {
+        host: "another.com"
+      }
+    }));
+    expect(inSameDomain()).toBeFalsy();
+
+    windowSpy.mockImplementation(() => ({
+      parent: null,
+      location: {
+        host: "example.com"
+      }
+    }));
+
+    expect(inSameDomain()).toBeFalsy();
+  });
+});
