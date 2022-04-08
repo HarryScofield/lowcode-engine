@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { isSchema } from '../../src/utils/common';
+import { isSchema, isFileSchema } from '../../src/utils/common';
 
 describe('test isSchema from utils/common ', () => {
   it('should be false when empty value is passed', () => {
@@ -36,5 +36,20 @@ describe('test isSchema from utils/common ', () => {
     expect(isSchema({ componentName: 'Button', props: null})).toBeFalsy();
     expect(isSchema({ componentName: 'Button', props: []})).toBeFalsy();
     expect(isSchema({ componentName: 'Button', props: 'props string'})).toBeFalsy();
+  });
+});
+
+describe('test isFileSchema from utils/common ', () => {
+  it('should be false when invalid schema is passed', () => {
+    expect(isFileSchema({ xxxName: 'Button'})).toBeFalsy();
+    expect(isFileSchema({ componentName: 'Button', props: null})).toBeFalsy();
+    expect(isFileSchema({ componentName: 'Button', props: []})).toBeFalsy();
+    expect(isFileSchema({ componentName: 'Button', props: 'props string'})).toBeFalsy();
+  });
+  it('should be true only when schema with root named Page || Block || Component is passed', () => {
+    expect(isFileSchema({ componentName: 'Page', props: {}})).toBeTruthy();
+    expect(isFileSchema({ componentName: 'Block', props: {}})).toBeTruthy();
+    expect(isFileSchema({ componentName: 'Component', props: {}})).toBeTruthy();
+    expect(isFileSchema({ componentName: 'Button', props: {}})).toBeFalsy();
   });
 });

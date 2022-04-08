@@ -73,10 +73,16 @@ export function isSchema(schema: any): schema is NodeSchema {
   };
   return !!(schema.componentName && isValidProps(schema.props));
 }
-
+/**
+ * componentName 是否协议中定义的几种容器类型：低代码业务组件容器 Component、区块容器 Block、页面容器 Page
+ * @param schema
+ * @returns boolean
+ */
 export function isFileSchema(schema: NodeSchema): schema is RootSchema {
-  if (isEmpty(schema)) return false;
-  return ['Page', 'Block', 'Component', 'Addon', 'Temp'].includes(schema.componentName);
+  if (!isSchema(schema)) {
+    return false;
+  }
+  return ['Page', 'Block', 'Component'].includes(schema.componentName);
 }
 
 // 判断当前页面是否被嵌入到同域的页面中
