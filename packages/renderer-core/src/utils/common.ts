@@ -40,14 +40,15 @@ const REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xe
 const debug = Debug('utils:index');
 
 /**
+ * check if schema passed in is a valid schema
  * @name isSchema
- * @description 判断是否是模型结构
+ * @returns boolean
  */
 export function isSchema(schema: any): schema is NodeSchema {
   if (isEmpty(schema)) {
     return false;
   }
-  // Leaf 组件也返回 true
+  // Leaf and Slot should be valid
   if (schema.componentName === 'Leaf' || schema.componentName === 'Slot') {
     return true;
   }
@@ -68,7 +69,7 @@ export function isSchema(schema: any): schema is NodeSchema {
 }
 
 /**
- * componentName 是否协议中定义的几种容器类型：低代码业务组件容器 Component、区块容器 Block、页面容器 Page
+ * check if schema passed in is a container type, including : Component Block Page
  * @param schema
  * @returns boolean
  */
@@ -80,7 +81,7 @@ export function isFileSchema(schema: NodeSchema): schema is RootSchema {
 }
 
 /**
- * 判断当前页面是否被嵌入到同域的页面中
+ * check if current page is nested within another page with same host
  * @returns boolean
  */
 export function inSameDomain() {
@@ -92,7 +93,7 @@ export function inSameDomain() {
 }
 
 /**
- * 根据fileName提供FileCssName
+ * get css styled name from schema`s fileName
  * FileName -> lce-file-name
  * @returns string
  */
@@ -108,7 +109,7 @@ export function getFileCssName(fileName: string) {
 }
 
 /**
- * 判断是否JSSlot类型
+ * check if a object is type of JSSlot
  * @returns string
  */
 export function isJSSlot(obj: any): obj is JSSlot {
@@ -119,16 +120,30 @@ export function isJSSlot(obj: any): obj is JSSlot {
     return false;
   }
 
-  // 兼容原 JSBlock 的老协议
+  // Compatible with the old protocol JSBlock
   return ([EXPRESSION_TYPE.JSSLOT, EXPRESSION_TYPE.JSBLOCK].includes(obj.type));
 }
 
+/**
+ * get value from an object
+ * @returns string
+ */
 export function getValue(obj: any, path: string, defaultValue = {}) {
-  if (isEmpty(obj) || typeof obj !== 'object') return defaultValue;
+  // array is not valid type, return default value
+  if (Array.isArray(obj)) {
+    return defaultValue;
+  }
+
+  if (isEmpty(obj) || typeof obj !== 'object') {
+    return defaultValue;
+  }
+
   const res = path.split('.').reduce((pre, cur) => {
     return pre && pre[cur];
   }, obj);
-  if (res === undefined) return defaultValue;
+  if (res === undefined) {
+    return defaultValue;
+  }
   return res;
 }
 

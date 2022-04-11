@@ -1,5 +1,12 @@
 // @ts-nocheck
-import { isSchema, isFileSchema, inSameDomain, getFileCssName, isJSSlot } from '../../src/utils/common';
+import { 
+  isSchema, 
+  isFileSchema, 
+  inSameDomain, 
+  getFileCssName, 
+  isJSSlot, 
+  getValue,
+} from '../../src/utils/common';
 
 describe('test isSchema', () => {
   it('should be false when empty value is passed', () => {
@@ -119,8 +126,30 @@ describe('test isJSSlot ', () => {
     expect(isJSSlot(undefined)).toBeFalsy();
     expect(isJSSlot('stringValue')).toBeFalsy();
     expect(isJSSlot([1, 2, 3])).toBeFalsy();
-    expect(isJSSlot({ type: 'JSSlot'})).toBeTruthy();
-    expect(isJSSlot({ type: 'JSBlock'})).toBeTruthy();
-    expect(isJSSlot({ type: 'anyOtherType'})).toBeFalsy();
+    expect(isJSSlot({ type: 'JSSlot' })).toBeTruthy();
+    expect(isJSSlot({ type: 'JSBlock' })).toBeTruthy();
+    expect(isJSSlot({ type: 'anyOtherType' })).toBeFalsy();
+  });
+});
+
+describe.only('test getValue ', () => {
+  it('should check params', () => {
+    expect(getValue(null, 'somePath')).toStrictEqual({});
+    expect(getValue(undefined, 'somePath')).toStrictEqual({});
+    // array is not valid input, return default
+    expect(getValue([], 'somePath')).toStrictEqual({});
+    expect(getValue([], 'somePath', 'aaa')).toStrictEqual('aaa');
+    expect(getValue([1, 2, 3], 'somePath', 'aaa')).toStrictEqual('aaa');
+
+    expect(getValue({}, 'somePath')).toStrictEqual({});
+    expect(getValue({}, 'somePath', 'default')).toStrictEqual('default');
+  });
+  it('should work normally', () => {
+    // single segment path
+    expect(getValue({ a: 'aValue' }, 'a')).toStrictEqual('aValue');
+    expect(getValue({ a: 'aValue', f:null }, 'f')).toBeNull();
+    expect(getValue({ a: { b: 'bValue' } }, 'a.b')).toStrictEqual('bValue');
+    expect(getValue({ a: { b: 'bValue', c: { d: 'dValue' } } }, 'a.c.d')).toStrictEqual('dValue');
+    expect(getValue({ a: { b: 'bValue', c: { d: 'dValue' } } }, 'e')).toStrictEqual({});
   });
 });
