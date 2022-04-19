@@ -1,4 +1,20 @@
-import React, { Component, PureComponent, createElement, createContext, forwardRef, ReactInstance, ContextType } from 'react';
+/*
+ * @Description:
+ * @Version:
+ * @Author: Huang ai peng
+ * @Date: 2022-04-20 01:37:18
+ * @LastEditors: Huang ai peng
+ * @LastEditTime: 2022-04-20 01:37:18
+ */
+import React, {
+  Component,
+  PureComponent,
+  createElement,
+  createContext,
+  forwardRef,
+  ReactInstance,
+  ContextType,
+} from 'react';
 import ReactDOM from 'react-dom';
 import {
   adapter,
@@ -42,10 +58,7 @@ function factory(): types.IRenderComponent {
 
     context: ContextType<any>;
 
-    setState: (
-      state: types.IRendererState,
-      callback?: () => void,
-    ) => void;
+    setState: (state: types.IRendererState, callback?: () => void) => void;
 
     forceUpdate: (callback?: () => void) => void;
 
@@ -63,4 +76,5 @@ function factory(): types.IRenderComponent {
   };
 }
 
+// 测试一下
 export default factory();
